@@ -126,3 +126,5 @@ dmypy.json
 .pdm.toml
 
 .idea/
+
+config.toml

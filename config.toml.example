@@ -1,0 +1,6 @@
+
+[File_Path]
+web_driver = './msedgedriver.exe'
+
+[Tesseract]
+instance = 'Subdomain of your tessereact instance'
