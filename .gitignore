@@ -128,3 +128,5 @@ dmypy.json
 .idea/
 
 config.toml
+
+msedgedriver.exe
