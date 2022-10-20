@@ -32,6 +32,12 @@ def login(web_driver=None):
     else:
         raise Exception(f'Failed to find home: {web_driver.current_url}')
 
+def OpenExistingCall(web_driver = None, call_num = None, ro = None):
+    if call_num:
+        web_driver.get(f'https://***REMOVED***.asolvi.io/ServiceCentre/SC_RepairJob/aspx/repairjob_modify.aspx?CALL_NUM={call_num}')
+    elif ro:
+        pass
+
 
 if __name__ == '__main__':
     # Start the browser
@@ -39,3 +45,4 @@ if __name__ == '__main__':
     driver = webdriver.Edge(service=service)
     driver.get(f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_Login/aspx/Login_Launch.aspx')
     login(driver)
+    OpenExistingCall(driver, ro='4802993696')
