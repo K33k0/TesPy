@@ -51,17 +51,13 @@ def login(driver=None):
 
 def OpenExistingCall(driver=None, call_num=None, ro=None):
     if ro:
-        url = "https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_RepairJob/aspx/repairjob_query.aspx"
-
-        ### PROOF THAT THIS CAN WORK
-        # resp = requests.get('https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_UtilsAdmin/aspx/UtilsAdmin.aspx?LogUserAction=Y',
-        #                    cookies=get_cookies(driver))
+        url = f"https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_RepairJob/aspx/repairjob_query.aspx"
 
         resp = requests.post(
             url,
             data={
                 "ajax-source-id": "scmaster_cplMainContent_grdPowerQuery_ctlPowerQueryGrid",
-                "ajax-data-instance-id": "f37fa3af-93aa-43a0-9f2c-e87f2976fe5e",
+                #"ajax-data-instance-id": "f37fa3af-93aa-43a0-9f2c-e87f2976fe5e",
                 "ajax-method": "PowerQueryGrid.RequestData",
                 "ajax-data-config": json.dumps(
                     {
