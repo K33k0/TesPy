@@ -130,3 +130,13 @@ dmypy.json
 config.toml
 
 msedgedriver.exe
+
+__pypackages__/
+
+Scripts/
+
+pdm.lock
+
+poetry.lock
+
+pyvenv.cfg

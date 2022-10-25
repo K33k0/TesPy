@@ -1,18 +1,25 @@
-[tool.poetry]
+[project]
 name = "tespy"
 version = "0.1.0"
 description = "An Enhancement Suite for Tesseract Stock Management System"
-authors = ["Kieran Wynne <keewynne90@gmail.com>"]
-license = "MIT"
-readme = "README.md"
+authors = [
+    {name = "Kieran Wynne", email = "keewynne90@gmail.com"},
+]
+dependencies = [
+    "requests>=2.28.1",
+    "selenium>=4.5.0",
+    "toml>=0.10.2",
+]
+requires-python = ">=3.11"
+license = {text = "MIT"}
+[project.optional-dependencies]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-toml = "^0.10.2"
-requests = "^2.28.1"
-selenium = "^4.5.0"
-
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "pyinstaller>=4.5.1",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
