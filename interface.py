@@ -165,6 +165,7 @@ def submit():
     )
     if len(job_number) > 6:
         AddServiceReport(
+            driver,
             employee=employee,
             time_taken=time_taken,
             solution=solution,
