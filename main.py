@@ -358,13 +358,11 @@ def print_window(driver, call_num=None, ro=None):
     print_button_2.click()
 
     driver.execute_script(
-        """
-    download_link = document.querySelector('#SSRSReportViewer_fixedTable > tbody > tr:nth-child(4) > td > div.msrs-printdialog-main > div.msrs-printdialog-printing > div.msrs-printdialog-divbuttonscontainer > div > p')
-    download_link.textContent = 'Job Done'
-    download_link.addEventListener('click', function(){
-        window.location.href = 'https://{}.asolvi.io/ServiceCentre/SC_MyHome/aspx/myhome.aspx'
-    })
-    """.format(SUBDOMAIN)
+    "download_link = document.querySelector('#SSRSReportViewer_fixedTable > tbody > tr:nth-child(4) > td > div.msrs-printdialog-main > div.msrs-printdialog-printing > div.msrs-printdialog-divbuttonscontainer > div > p')\n"
+    "download_link.textContent = 'Job Done'\n"
+    "download_link.addEventListener('click', function(){\n"
+    f"    window.location.href = 'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_MyHome/aspx/myhome.aspx'\n"
+    "})"
     )
     time.sleep(3)
 
