@@ -62,13 +62,13 @@ def OpenExistingCall(driver=None, call_num=None, ro=None):
 def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=None,
                awaiting_part=None, ship_site=None, is_repaired=None, next_area=None):
     wait = WebDriverWait(driver, 15, poll_frequency=0.5)
-
+    
     wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_ruDateTime_header'))).click()
     wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_ruRefDetails_header'))).click()
     wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_ruShippingDetails_header'))).click()
 
     ship_status_selector = 'scmaster_cplMainContent_txtJobShipDate1'
-    job_shipped = wait.until(EC.element_to_be_clickable((By.ID, ship_status_selector))).text
+    job_shipped = wait.until(EC.element_to_be_clickable((By.ID, ship_status_selector))).get_attribute('value')
 
 
 
@@ -76,13 +76,14 @@ def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=Non
         # Text area id
         elem_selector = 'scmaster_cplMainContent_txtCallProblem'
         elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        elem.clear()
         elem.send_keys(f' ## {problem} ##')
 
     if engineer:
         # input id
         elem_selector = 'scmaster_cplMainContent_cboCallEmployNum'
         elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
-        current_employee = elem.text
+        current_employee = elem.get_attribute('value')
         elem.clear()
         elem.send_keys(engineer)
         
@@ -90,7 +91,7 @@ def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=Non
         # input id
         elem_selector = 'scmaster_cplMainContent_txtJobApproveRef'
         elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
-        current_rma = elem.text
+        current_rma = elem.get_attribute('value')
         elem.clear()
         elem.send_keys(rma)
 
@@ -98,7 +99,7 @@ def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=Non
         # input id
         elem_selector = 'scmaster_cplMainContent_cboCallProbCode'
         elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
-        current_prob_code = elem.text   
+        current_prob_code = elem.get_attribute('value')   
         elem.clear()
         elem.send_keys(prob_code)
 
@@ -106,23 +107,23 @@ def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=Non
         # input id
         elem_selector = 'scmaster_cplMainContent_txtCallRef'
         elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
-        current_awaiting_part = elem.text     
+        current_awaiting_part = elem.get_attribute('value')     
         elem.clear()
         elem.send_keys(awaiting_part)
         
-    if ship_site and not job_shipped == "":
+    if ship_site and job_shipped == "":
         # input id
         elem_selector = 'scmaster_cplMainContent_cboShipSiteNum'
         elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
-        current_ship_site = elem.text 
+        current_ship_site = elem.get_attribute('value') 
         elem.clear()
-        elem.send_keys(awaiting_part)
+        elem.send_keys(ship_site)
 
         pass
     # if not blank true (if blank repaired)
-    repair_status = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtCompDate' ))).text
-    current_ro = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtJobRef6'))).text
-    current_rico = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtJobRef4'))).text
+    repair_status = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtCompDate' ))).get_attribute('value')
+    current_ro = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtJobRef6'))).get_attribute('value')
+    current_rico = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtJobRef4'))).get_attribute('value')
 
     submit_btn = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit")))
     submit_btn.click()
@@ -133,7 +134,7 @@ def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=Non
         next_area_input.clear()
         next_area_input.send_keys(next_area)
 
-    if is_repaired and not repair_status == "":
+    if is_repaired and repair_status == "":
         item_repaired_box = wait.until(
             EC.element_to_be_clickable(
                 (By.ID, "scmaster_cplMainContent_chkItemRepaired")
@@ -219,6 +220,35 @@ def getCallNumFromRO(driver, ro):
     )
     call_num = resp.json()["results"][0]["call_num"]
     return call_num
+
+def shipCall(driver, call_num, workshop_site, mainifest=None):
+    driver.get(f"https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_RepairJob/aspx/repairjob_ship_wzd.aspx")
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    workshop_site_input = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cboJobNumWorkshopSiteNum")))
+    if workshop_site_input.get_attribute('value') != workshop_site:
+        workshop_site_input.clear()
+        workshop_site_input.send_keys(workshop_site)
+    for call in call_num:
+        job_number_input = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_txtInputJobNum")))
+        job_number_input.send_keys(str(call))
+        job_number_submit = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cmdAddJobNum")))
+        job_number_submit.click()
+        wait.until(EC.text_to_be_present_in_element_value((By.ID, "scmaster_cplMainContent_txtInputJobNum"), ""))
+
+    next_1 = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cmdNext")))
+    next_1.click()
+
+    mainifest_input = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_txtJobShipRef")))
+    if mainifest:
+        mainifest_input.send_keys(mainifest)
+    next_2 = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cmdNext")))
+    next_2.click()
+
+    select_all = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_chkSelectAll")))
+    select_all.click()
+
+    driver.execute_script(f'window.alert("Attempting to ship {len(call_num)} calls.\nConfirm and submit.")')
+
 
 
 def AddServiceReport(
