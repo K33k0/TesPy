@@ -1,3 +1,4 @@
+#! python
 import time
 
 from selenium import webdriver
@@ -58,6 +59,96 @@ def OpenExistingCall(driver=None, call_num=None, ro=None):
         f"https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_RepairJob/aspx/repairjob_modify.aspx?CALL_NUM={call_num}"
     )
 
+def UpdateCall(driver=None, problem=None, engineer=None, rma=None, prob_code=None,
+               awaiting_part=None, ship_site=None, is_repaired=None, next_area=None):
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+
+    wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_ruDateTime_header'))).click()
+    wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_ruRefDetails_header'))).click()
+    wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_ruShippingDetails_header'))).click()
+
+    ship_status_selector = 'scmaster_cplMainContent_txtJobShipDate1'
+    job_shipped = wait.until(EC.element_to_be_clickable((By.ID, ship_status_selector))).text
+
+
+
+    if problem:
+        # Text area id
+        elem_selector = 'scmaster_cplMainContent_txtCallProblem'
+        elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        elem.send_keys(f' ## {problem} ##')
+
+    if engineer:
+        # input id
+        elem_selector = 'scmaster_cplMainContent_cboCallEmployNum'
+        elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        current_employee = elem.text
+        elem.clear()
+        elem.send_keys(engineer)
+        
+    if rma:
+        # input id
+        elem_selector = 'scmaster_cplMainContent_txtJobApproveRef'
+        elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        current_rma = elem.text
+        elem.clear()
+        elem.send_keys(rma)
+
+    if prob_code:
+        # input id
+        elem_selector = 'scmaster_cplMainContent_cboCallProbCode'
+        elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        current_prob_code = elem.text   
+        elem.clear()
+        elem.send_keys(prob_code)
+
+    if awaiting_part:
+        # input id
+        elem_selector = 'scmaster_cplMainContent_txtCallRef'
+        elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        current_awaiting_part = elem.text     
+        elem.clear()
+        elem.send_keys(awaiting_part)
+        
+    if ship_site and not job_shipped == "":
+        # input id
+        elem_selector = 'scmaster_cplMainContent_cboShipSiteNum'
+        elem = wait.until(EC.element_to_be_clickable((By.ID, elem_selector)))
+        current_ship_site = elem.text 
+        elem.clear()
+        elem.send_keys(awaiting_part)
+
+        pass
+    # if not blank true (if blank repaired)
+    repair_status = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtCompDate' ))).text
+    current_ro = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtJobRef6'))).text
+    current_rico = wait.until(EC.element_to_be_clickable((By.ID, 'scmaster_cplMainContent_txtJobRef4'))).text
+
+    submit_btn = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit")))
+    submit_btn.click()
+
+    ## Next area
+    next_area_input = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cboCallUpdAreaCode")))
+    if next_area:
+        next_area_input.clear()
+        next_area_input.send_keys(next_area)
+
+    if is_repaired and not repair_status == "":
+        item_repaired_box = wait.until(
+            EC.element_to_be_clickable(
+                (By.ID, "scmaster_cplMainContent_chkItemRepaired")
+            )
+        )
+        item_repaired_box.click()
+
+    submit_btn = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit")))
+    submit_btn.click()
+
+    alert = WebDriverWait(driver, 15).until(EC.alert_is_present())
+    if alert.text == 'Repair Job record was successfully updated':
+        alert.accept()
+    else:
+        raise Exception("Something went wrong with the update")
 
 def getCallNumFromRO(driver, ro):
     url = f"https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_RepairJob/aspx/repairjob_query.aspx"
@@ -385,18 +476,6 @@ if __name__ == "__main__":
     # Start the browser
     driver = initialize_driver()
     login(driver)
-    print_window(driver, call_num="654456")
     OpenExistingCall(driver, ro="4802993696")
-    # AddServiceReport(
-    #     driver,
-    #     ro="4802993696",
-    #     employee="406",
-    #     time_taken=20,
-    #     solution="Warranty return",
-    #     next_area="wrep",
-    #     is_repaired=True,
-    # )
-    # TODO Add service lines
-    # TODO Book in job
-    # TOdO Create job
-    # driver.quit()
+    # 4802993696 is 414 call
+    UpdateCall(driver,"Tesseract test", '406', 'rma', 'TS1', 'awaiting part', 'zulu',True, '3rdp')
