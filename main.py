@@ -492,7 +492,6 @@ def print_window(driver, call_num=None, ro=None):
         EC.element_to_be_clickable((By.XPATH, '//*[@id="scmaster_sidebarToggle"]/div'))
     )
 
-
 def initialize_driver():
     service = Service(WEBDRIVER_PATH)
     driver = webdriver.Edge(service=service)
@@ -502,10 +501,242 @@ def initialize_driver():
     return driver
 
 
+def openSalesOrder(driver, order_number):
+    driver.get(f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_SalesOrderHeader/aspx/SorH_modify.aspx?SORH_ORD_NUM={order_number}')
+
+def getSalesOrderLines(driver, order_number):
+    # openSalesOrder(driver, order_number)
+    url = f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_SalesOrderLines/aspx/sorl_query.aspx?ChildKeyField=SorL_Ord_Num&ChildKeyValue={order_number}&FromParentFrameList=Y&PowerBarParentURL=~%2FSC%5FSalesOrderHeader%2Faspx%2FSorH%5Fmodify%2Easpx%3FSorH%5FOrd%5FNum%3D{order_number}%26PowerBarButton%3DOrder+Lines'
+    data = {
+    'ajax-source-id': 'scmaster_cplMainContent_grdPowerQuery_ctlPowerQueryGrid',
+    'ajax-data-instance-id': 'scmaster_cplMainContent_grdPowerQuery_ctlPowerQueryGrid',
+    'ajax-method': 'PowerQueryGrid.RequestData',
+    'ajax-data-config': json.dumps({"listconfigh_id": 93, "listconfigh_functions_num": 1750, "listconfigh_pass_group": "",
+     "listconfigh_pass_user": "kieranw", "listconfigh_default": True, "listconfigh_name": "Sales+Order+Line+Query",
+     "listconfigh_object_source": "SorL", "listconfigh_last_update": "2021-09-08T11:19:55", "columns": [
+        {"listconfigl_id": 862, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Ord_Num",
+         "listconfigl_data_type": "System.Int32", "listconfigl_header_text": "Order+Num", "listconfigl_rank": 1,
+         "listconfigl_data_format": "", "listconfigl_column_width": 100, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 1, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 863, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorH_Ord_Date",
+         "listconfigl_data_type": "System.DateTime", "listconfigl_header_text": "Order+Date", "listconfigl_rank": 2,
+         "listconfigl_data_format": "d", "listconfigl_column_width": 100, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 6, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 864, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorH_Stock_Site_Num",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Stock+Site+Num", "listconfigl_rank": 3,
+         "listconfigl_data_format": "", "listconfigl_column_width": 120, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 865, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorH_Ship_Site_Num",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Ship+Site+Num", "listconfigl_rank": 4,
+         "listconfigl_data_format": "", "listconfigl_column_width": 120, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 866, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Part_Num",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Part+Number", "listconfigl_rank": 5,
+         "listconfigl_data_format": "", "listconfigl_column_width": 140, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 1, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 867, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Part_Desc",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Description", "listconfigl_rank": 6,
+         "listconfigl_data_format": "", "listconfigl_column_width": 150, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 868, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Qty_Ordered",
+         "listconfigl_data_type": "System.Int32", "listconfigl_header_text": "Qty+Ord", "listconfigl_rank": 7,
+         "listconfigl_data_format": "", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 869, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Allo",
+         "listconfigl_data_type": "System.Int32", "listconfigl_header_text": "Qty+Allo", "listconfigl_rank": 8,
+         "listconfigl_data_format": "", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 870, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Qty_Ship",
+         "listconfigl_data_type": "System.Int32", "listconfigl_header_text": "Qty+Ship", "listconfigl_rank": 9,
+         "listconfigl_data_format": "", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 871, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Part_Price",
+         "listconfigl_data_type": "System.Decimal", "listconfigl_header_text": "Unit+Price", "listconfigl_rank": 10,
+         "listconfigl_data_format": "2", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 872, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Disc",
+         "listconfigl_data_type": "System.Decimal", "listconfigl_header_text": "Disc+(%)", "listconfigl_rank": 11,
+         "listconfigl_data_format": "2", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 873, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Sale_Price",
+         "listconfigl_data_type": "System.Decimal", "listconfigl_header_text": "Sale+Price", "listconfigl_rank": 12,
+         "listconfigl_data_format": "2", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 874, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Achieve_Price",
+         "listconfigl_data_type": "System.Decimal", "listconfigl_header_text": "Achieve+Price", "listconfigl_rank": 13,
+         "listconfigl_data_format": "2", "listconfigl_column_width": 100, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 875, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Ref",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Ref", "listconfigl_rank": 14,
+         "listconfigl_data_format": "", "listconfigl_column_width": 120, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 876, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Back_Order",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Back+Order", "listconfigl_rank": 15,
+         "listconfigl_data_format": "", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 877, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Suspended_Flag",
+         "listconfigl_data_type": "System.String", "listconfigl_header_text": "Suspended", "listconfigl_rank": 16,
+         "listconfigl_data_format": "", "listconfigl_column_width": 90, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 9, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 878, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "Calc_SorL_Qty_Open",
+         "listconfigl_data_type": "System.Int32", "listconfigl_header_text": "Qty+Open", "listconfigl_rank": 17,
+         "listconfigl_data_format": "", "listconfigl_column_width": 80, "listconfigl_alignment": 0,
+         "listconfigl_sort_order": 0, "listconfigl_filter_expr": 3, "listconfigl_filter_value1": "",
+         "listconfigl_filter_value2": "", "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False},
+        {"listconfigl_id": 879, "listconfigl_listconfigh_id": 93, "listconfigl_column_name": "SorL_Last_Update",
+         "listconfigl_data_type": "System.DateTime", "listconfigl_header_text": "SorL_Last_Update",
+         "listconfigl_rank": 18, "listconfigl_data_format": "d", "listconfigl_column_width": 100,
+         "listconfigl_alignment": 2, "listconfigl_sort_order": 0, "listconfigl_filter_expr": 6,
+         "listconfigl_filter_value1": "", "listconfigl_filter_value2": "",
+         "listconfigl_last_update": "2021-09-08T11:19:55", "filterapplies": False}], "issystemconfig": False}),
+    'ajax-data-pagenumber': 1,
+    'ajax-data-pagesize':15,
+    'ajax-data-format': 0,
+    'ajax-initiial-load': True,
+    'ajax-custom-query-filter': f'SorL_Ord_Num{order_number}',
+    'ajax-custom-exclude-criteria': None,
+    '__AntiXsrfToken': None
+    }
+    resp = requests.post(url,data=data,cookies=get_cookies(driver))
+    return resp.json()['results']
+
+def fillSalesShipment(driver, order_number, part_number, qty):
+    driver.get(f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_SalesOrderShipping/aspx/SorShipping_add.aspx?SORP_ORD_NUM={order_number}')
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    part_ship_input = wait.until(
+        EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cboSorPPartNum"))
+    )
+    part_ship_input.send_keys(part_number)
+    driver.execute_script("DisplayShippingCombo('cboSorPPartNum','SorShippingAdd');")
+    wait.until(EC.visibility_of_element_located((By.ID, 'fraModalPopup')))
+    driver.switch_to.frame('fraModalPopup')
+    part_ship_modal_td = wait.until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@id="scmaster_cplMainContent_grdDropdown"]/tbody/tr[2]/td[1]'))
+    )
+    part_ship_modal_td.click()
+    driver.switch_to.default_content()
+
+    shipped_qty_elem = wait.until(
+        EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_txtPartShippedQty"))
+    )
+    shipped_qty_elem.clear()
+    shipped_qty_elem.send_keys(qty)
+
+    wait.until(
+        EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit"))
+    ).click()
+
+    alert = WebDriverWait(driver, 15).until(EC.alert_is_present())
+    if 'successfully' in alert.text:
+        alert.accept()
+    else:
+        raise Exception("Something went wrong with your service report")
+
+
+
+def salesOrderAllocation(driver, order_number, part_number, qty):
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    # getSalesOrderLines(driver, order_number)
+    driver.get(f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_SalesOrderLines/aspx/sorl_modify.aspx?SORL_ORD_NUM={order_number}&SORL_PART_NUM={part_number}&PowerBarParentURL=~%2FSC%5FSalesOrderHeader%2Faspx%2FSorH%5Fmodify%2Easpx%3FSorH%5FOrd%5FNum%3D{order_number}%26PowerBarButton%3DOrder+Lines')
+    alloc_input = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_txtSorLAllo")))
+    alloc_input.clear()
+    alloc_input.send_keys(qty)
+
+    submit_btn = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit")))
+    submit_btn.click()
+
+    # TODO: popup handling
+
+def __handle_modal(driver, frame_id):
+    driver.switch_to.frame(frame_id)
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    modal = wait.until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@id="scmaster_cplMainContent_grdDropdown"]/tbody/tr[2]/td[1]'))
+    )
+    modal.click()
+    driver.switch_to.default_content()
+
+def __fill_input(elem, text):
+    elem.clear()
+    elem.send_keys(text)
+
+def __wait_for_click_by_id(driver, ID):
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    elem = wait.until(EC.element_to_be_clickable((By.ID, ID)))
+    return elem
+def createSalesOrder(driver, hub_num, stock_site):
+    driver.get(f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_SalesOrderHeader/aspx/SorH_add.aspx')
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    stock_site_input = wait.until(EC.element_to_be_clickable((By.ID, "scmaster_cplMainContent_cboSorHStockSiteNum")))
+    __fill_input(stock_site_input, stock_site)
+    driver.execute_script("DisplaySorHCombo('cboSorHStockSiteNum', 'frmSorHAdd');")
+    __handle_modal(driver, 'fraModalPopup')
+    ship_site_input = __wait_for_click_by_id(driver, 'scmaster_cplMainContent_cboSorHShipSiteNum')
+    __fill_input(ship_site_input, f"10{hub_num}")
+    driver.execute_script("DisplaySorHCombo('cboSorHShipSiteNum', 'frmSorHAdd');")
+    __handle_modal(driver, 'fraModalPopup')
+    wait.until(
+        EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit"))
+    ).click()
+
+    alert = WebDriverWait(driver, 15).until(EC.alert_is_present())
+    if 'successfully' in alert.text:
+        alert.accept()
+    else:
+        raise Exception("Something went wrong with your service report")
+
+    order_num = __wait_for_click_by_id(driver, 'scmaster_cplMainContent_lblSorHOrdNumVal').text
+    return order_num
+
+def addSalesOrderLines(driver, ord_num, part_num, qty):
+    driver.get(f'https://{SUBDOMAIN}.asolvi.io/ServiceCentre/SC_SalesOrderLines/aspx/sorl_add.aspx?SORL_ORD_NUM={ord_num}')
+
+    part_num_input = __wait_for_click_by_id(driver, 'scmaster_cplMainContent_cboSorLPartNum')
+    __fill_input(part_num_input, part_num)
+    driver.execute_script("DisplaySorLCombo('cboSorLPartNum', 'frmSorLAdd');")
+    __handle_modal(driver, 'fraModalPopup')
+    wait = WebDriverWait(driver, 15, poll_frequency=0.5)
+    wait.until(EC.text_to_be_present_in_element_value((By.ID, 'scmaster_cplMainContent_txtSorLAchievePrice'),'0'))
+    order_qty_input = __wait_for_click_by_id(driver, 'scmaster_cplMainContent_txtSorLQtyOrdered')
+    __fill_input(order_qty_input, qty)
+    alloc_qty_input = __wait_for_click_by_id(driver, 'scmaster_cplMainContent_txtSorLAllo')
+    __fill_input(alloc_qty_input, qty)
+    wait.until(
+        EC.element_to_be_clickable((By.ID, "scmaster_btnSubmit"))
+    ).click()
+
+    alert = WebDriverWait(driver, 15).until(EC.alert_is_present())
+    if 'successfully' in alert.text:
+        alert.accept()
+    else:
+        raise Exception("Something went wrong with your service report")
+
+
+
 if __name__ == "__main__":
     # Start the browser
     driver = initialize_driver()
     login(driver)
-    OpenExistingCall(driver, ro="4802993696")
-    # 4802993696 is 414 call
-    UpdateCall(driver,"Tesseract test", '406', 'rma', 'TS1', 'awaiting part', 'zulu',True, '3rdp')
+
+    #createSalesOrder(driver, '8887', 'STOCONS')
+    # Created 79305
+    # Added headsets x 2
+    # Shipped 2 heaedsets
+    fillSalesShipment(driver, '79305', 'VOCOVOHEADSET', '2')
+

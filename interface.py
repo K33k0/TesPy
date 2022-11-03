@@ -1,5 +1,10 @@
 from main import *
 import tkinter as tk
+from loguru import logger
+from datetime import date
+
+current_date = date.today()
+logger.add(f"{current_date}-TESPY.Interface.log", format="{time} | {level} | {message}")
 
 window = tk.Tk()
 title = tk.Label(text="TES")
@@ -19,6 +24,7 @@ init_button.grid(row=1, column=0, pady=2)
 def login_init():
     global driver
     login(driver)
+    logger.debug('Logged into Tesseract')
 
 
 login_button = tk.Button(text="Login", command=login_init)
@@ -150,20 +156,12 @@ def submit():
     warranty_return = warranty_return_var.get() == 1
     solution = solution_text.get("1.0", tk.END)
     item_repaired = is_repaired_checkbox_var.get() == 1
-    print(
-        employee,
-        time_taken,
-        job_number,
-        next_area,
-        fault_code,
-        customer_damage,
-        repair_code,
-        nff,
-        warranty_return,
-        solution,
-        item_repaired,
-    )
+    logger.info(f'Employee: {employee}, Time Taken: {time_taken}, Job Number: {job_number}, '
+                f'Next Area: {next_area}, Fault Code:{fault_code}, Customer Damage?: {customer_damage}, '
+                f'Repair Code: {repair_code}, NFF?: {nff}, Warranty Return: {warranty_return}, '
+                f'Solution: {solution}, Item Repaired?: {item_repaired}')
     if len(job_number) > 6:
+        logger.debug('Sending job number through conversion service report method')
         AddServiceReport(
             driver,
             employee=employee,
@@ -182,6 +180,7 @@ def submit():
         if item_repaired:
             print_window(driver, ro=job_number)
     else:
+        logger.debug('Sending job number to Service Report')
         AddServiceReport(
             driver,
             employee=employee,
