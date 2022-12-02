@@ -4,7 +4,7 @@ from loguru import logger
 from datetime import date
 
 current_date = date.today()
-logger.add(f"{current_date}-TESPY.Interface.log", format="{time} | {level} | {message}")
+logger.add(f"logs/{current_date}-TESPY.Interface.log", format="{time} | {level} | {message}")
 
 window = tk.Tk()
 title = tk.Label(text="TES")
