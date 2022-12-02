@@ -12,6 +12,7 @@ title.grid(row=0, columnspan=3, pady=2)
 
 driver = None
 
+
 def initialize():
     global driver
     driver = initialize_driver()
@@ -162,7 +163,7 @@ def submit():
                 f'Solution: {solution}, Item Repaired?: {item_repaired}')
     if len(job_number) > 6:
         logger.debug('Sending job number through conversion service report method')
-        AddServiceReport(
+        call = AddServiceReport(
             driver,
             employee=employee,
             time_taken=time_taken,
@@ -178,7 +179,7 @@ def submit():
             ro=job_number,
         )
         if item_repaired:
-            print_window(driver, ro=job_number)
+            print_window(driver, call_num=call)
     else:
         logger.debug('Sending job number to Service Report')
         AddServiceReport(

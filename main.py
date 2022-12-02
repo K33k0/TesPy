@@ -374,8 +374,10 @@ def AddServiceReport(
     alert = WebDriverWait(driver, 15).until(EC.alert_is_present())
     if alert.text == 'This record was successfully added.':
         alert.accept()
+        return call_num
     else:
         raise Exception("Something went wrong with your service report")
+
 def print_window(driver, call_num=None, ro=None):
     if ro:
         call_num = getCallNumFromRO(driver, ro)
